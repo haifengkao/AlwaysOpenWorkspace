@@ -1,42 +1,77 @@
 {
-	"name": "autoaddfolder",
-	"displayName": "AutoAddFolder",
-	"description": "automatic add folder to the current workspace when a file is opened",
-	"version": "0.0.1",
-	"engines": {
-		"vscode": "^1.40.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:extension.helloWorld"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
-		"@types/vscode": "^1.40.0",
-		"glob": "^7.1.4",
-		"mocha": "^6.1.4",
-		"typescript": "^3.3.1",
-		"tslint": "^5.12.1",
-		"vscode-test": "^1.2.0"
-	}
+    "name": "AlwaysOpenWorkspace",
+    "displayName": "AlwaysOpenWorkspace",
+    "description": "automatic add folder to the current workspace when a file is opened",
+    "publisher": "Hai",
+    "author": {
+        "name": "Hai Feng Kao",
+        "email": "haifeng@cocoaspice.in",
+        "url": "https://github.com/haifengkao"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/haifengkao/AlwaysOpenWorkspace.git"
+    },
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.40.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "configuration": [
+            {
+                "title": "AlwaysOpenWorkspace",
+                "properties": {
+                    "AlwaysOpenWorkspace.enabled": {
+                        "type": "boolean",
+                        "description": "Enable",
+                        "default": true,
+                        "scope": "window"
+                    },
+                    "AlwaysOpenWorkspace.loggingEnabled": {
+                        "type": "boolean",
+                        "description": "Logging",
+                        "default": true,
+                        "scope": "window"
+                    },
+                    "AlwaysOpenWorkspace.rootFolders": {
+                        "type": "array",
+                        "description": "identify a workspace's dirgit@github.com:haifengkao/AlwaysOpenWorkspace.gitectory by the following files or directories. Directories must have a trailing slash. To work correctly with git submodules place .git before .git/.",
+                        "default": [".git", ".git/", "_darcs/", ".hg/", ".bzr/", ".svn/"],
+                        "scope": "window",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^5.2.6",
+        "@types/node": "^10.12.21",
+        "@types/vscode": "^1.40.0",
+        "glob": "^7.1.4",
+        "mocha": "^6.1.4",
+        "typescript": "^3.3.1",
+        "tslint": "^5.12.1",
+        "vscode-test": "^1.2.0"
+    },
+    "dependencies": {
+        "find-up": "^4.1.0"
+    }
 }
