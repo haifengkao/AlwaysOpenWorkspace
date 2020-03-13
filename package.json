@@ -1,6 +1,6 @@
 {
     "name": "AlwaysOpenWorkspace",
-    "displayName": "AlwaysOpenWorkspace",
+    "displayName": "Always Open Workspace",
     "description": "automatic add folder to the current workspace when a file is opened",
     "publisher": "Hai",
     "author": {
