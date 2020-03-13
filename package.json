@@ -1,7 +1,7 @@
 {
     "name": "AlwaysOpenWorkspace",
     "displayName": "Always Open Workspace",
-    "description": "automatic add folder to the current workspace when a file is opened",
+    "description": "automatically add folder to the current workspace when a file is opened",
     "publisher": "Hai",
     "author": {
         "name": "Hai Feng Kao",
