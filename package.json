@@ -12,7 +12,7 @@
         "type": "git",
         "url": "https://github.com/haifengkao/AlwaysOpenWorkspace.git"
     },
-    "version": "0.0.2",
+    "version": "0.0.3",
     "engines": {
         "vscode": "^1.40.0"
     },
@@ -34,6 +34,12 @@
                         "default": true,
                         "scope": "window"
                     },
+                    "AlwaysOpenWorkspace.autoClose": {
+                        "type": "boolean",
+                        "description": "Enable if you want to automatically close the workspace when there are no opened files in it. The last one won't be closed",
+                        "default": true,
+                        "scope": "window"
+                    },
                     "AlwaysOpenWorkspace.loggingEnabled": {
                         "type": "boolean",
                         "description": "Logging",
@@ -42,7 +48,7 @@
                     },
                     "AlwaysOpenWorkspace.rootFolders": {
                         "type": "array",
-                        "description": "identify a workspace's dirgit@github.com:haifengkao/AlwaysOpenWorkspace.gitectory by the following files or directories. Directories must have a trailing slash. To work correctly with git submodules place .git before .git/.",
+                        "description": "Identify a workspace folder by the following files or directories. Directories must have a trailing slash. To work correctly with git submodules place .git before .git/.",
                         "default": [".git", ".git/", "_darcs/", ".hg/", ".bzr/", ".svn/"],
                         "scope": "window",
                         "items": {
