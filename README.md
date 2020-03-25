@@ -13,6 +13,8 @@ Out of the box it knows about git, darcs, mercurial, bazaar, and subversion, but
 The workspace will not be opened if the file has been associated with any existing workspace. 
 
 # Features
+Auto-open: automatically add folders to the current workspace if there are opened files without corresponding folders. If there are no opened workspaces, a new one will be created. 
+
 Auto-close: automatically remove the folder when there are no opened files in it. The last one won't be removed. It can be disabled in the setting.
 
 # Known Issues
