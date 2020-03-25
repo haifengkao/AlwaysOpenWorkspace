@@ -14,5 +14,8 @@ The workspace will not be opened if the file has been associated with any existi
 
 ## Release Notes
 
+### 0.0.3
+- Automatcally remove folder if all files belong to the folder are closed
+
 ### 0.0.1
 - Initial release
