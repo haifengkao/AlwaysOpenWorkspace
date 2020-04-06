@@ -15,6 +15,8 @@ export function dumpInConsole(...args: any[]) {
 
 export function userDocuments(): Array<Uri>
 { 
+    // TODO: textDocuements do not return all opened editors. need another API for this task 
+    // https://github.com/microsoft/vscode/issues/15178
     return vscode.workspace.textDocuments.map(doc => doc.uri).filter(uri => uri.scheme == 'file');
 }
 
@@ -54,9 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
         loggingEnabled = logEnabled
     }
 
-    closeDeadFolders();
-
-    const disposable = vscode.workspace.onDidOpenTextDocument( async (textDocument) => {
+    async function didOpenTextDocument(textDocument: TextDocument): Promise<any> {
         const isEnabled: boolean | undefined = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.enabled");
         const logEnabled: boolean | undefined  = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.loggingEnabled");
         const rootFolders: string[] | undefined  = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.rootFolders");
@@ -103,7 +103,9 @@ export function activate(context: vscode.ExtensionContext) {
                 //dumpInConsole("AlwaysOpenWorkspace failed to find: ", name, folderPath);
             }
         }
-    });
+    }
+    const disposable = vscode.workspace.onDidOpenTextDocument(didOpenTextDocument);
+    vscode.workspace.textDocuments.forEach(didOpenTextDocument);
 
     const disposable2 = vscode.workspace.onDidCloseTextDocument((textDocument) => {
         const isEnabled: boolean | undefined = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.enabled");
