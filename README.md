@@ -18,7 +18,8 @@ Auto-open: automatically add folders to the current workspace if there are opene
 Auto-close: automatically remove the folder when there are no opened files in it. The last one won't be removed. It can be disabled in the setting.
 
 # Known Issues
-For nodejs projects, some vscode plugins will open `package.json` and `tsconfig.json` automatically. In such a case, the auto-close feature will fail to function because these files cannot be closed by the user.
+- For nodejs projects, some vscode plugins will open `package.json` and `tsconfig.json` automatically. In such a case, the auto-close feature will fail to function because these files cannot be closed by the user.
+- Sometimes the Auto-close will fail to remove the unused folder. We are waiting for VS Code to support [better editor API](https://github.com/microsoft/vscode/issues/15178) to solve it. 
 
 # Debug
 All logs will be shown in `Help`->`Toggle Developer Tools`
