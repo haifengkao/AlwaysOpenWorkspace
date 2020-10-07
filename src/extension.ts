@@ -6,6 +6,7 @@ import * as path from 'path';
 import {  TextDocument, Uri } from 'vscode';
 
 var loggingEnabled = false;
+var shouldAutoCloseVsCodeWhenAllEditorsAreClosed = false;
 
 export function dumpInConsole(...args: any[]) {
     if (loggingEnabled) {
@@ -13,25 +14,33 @@ export function dumpInConsole(...args: any[]) {
     }
 }
 
+function shouldCloseVSCode(): boolean {
+    dumpInConsole("should close", userDocuments())
+
+    if (!shouldAutoCloseVsCodeWhenAllEditorsAreClosed) { return false; }
+
+    return userDocuments().length <= 0;
+}
+
 export function userDocuments(): Array<Uri>
-{ 
-    // TODO: textDocuements do not return all opened editors. need another API for this task 
+{
+    // TODO: textDocuements do not return all opened editors. need another API for this task
     // https://github.com/microsoft/vscode/issues/15178
     return vscode.workspace.textDocuments.map(doc => doc.uri).filter(uri => uri.scheme == 'file');
 }
 
 export function closeDeadFolders()
-{ 
+{
     const isAutoClose: boolean | undefined = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.autoClose");
     if (!isAutoClose) { return; }
 
     const docUris = userDocuments()
     if (docUris.length <= 0) { return; } // don't close the last workspace
 
-    const liveWorkspaces = new Set(docUris.map(function(fileUrl) { 
+    const liveWorkspaces = new Set(docUris.map(function(fileUrl) {
         return vscode.workspace.getWorkspaceFolder(fileUrl);
     }).filter(x => x != null)
-    );    
+    );
 
     const liveWorkspacesArray = Array.from(liveWorkspaces);
     const allWorkspaces = vscode.workspace.workspaceFolders || [];
@@ -56,11 +65,16 @@ export function activate(context: vscode.ExtensionContext) {
         loggingEnabled = logEnabled
     }
 
+    const shouldAutoCloseVSCode: boolean | undefined  = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.autoCloseVSCode");
+    if (shouldAutoCloseVSCode != undefined) {
+        shouldAutoCloseVsCodeWhenAllEditorsAreClosed = shouldAutoCloseVSCode;
+    }
+
     async function didOpenTextDocument(textDocument: TextDocument): Promise<any> {
         const isEnabled: boolean | undefined = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.enabled");
         const logEnabled: boolean | undefined  = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.loggingEnabled");
         const rootFolders: string[] | undefined  = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.rootFolders");
-    
+
         // if enabled is not defined or false then don't do anything...
         if (logEnabled != undefined) {
             loggingEnabled = logEnabled
@@ -72,7 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
 
-        if (!rootFolders) { 
+        if (!rootFolders) {
             dumpInConsole("AlwaysOpenWorkspace rootFolders are not set");
             return;
         }
@@ -84,13 +98,13 @@ export function activate(context: vscode.ExtensionContext) {
 
         dumpInConsole("AlwaysOpenWorkspace didOpen: ", fileUrl, filePath);
         const workspace = vscode.workspace.getWorkspaceFolder(fileUrl)
-        if (workspace) { 
+        if (workspace) {
             dumpInConsole("AlwaysOpenWorkspace has workspace just return: ", filePath);
-            return; 
+            return;
         } // we had the workspace, nothing to do
 
         const dirname = path.dirname(filePath)
-        for (var name of rootFolders) { 
+        for (var name of rootFolders) {
             const typeValue = (name.slice(-1) == "/") ? 'directory' : 'file';
             const folderPath = await findUp(name, {type: typeValue, cwd: dirname});
             if (folderPath) {
@@ -99,13 +113,12 @@ export function activate(context: vscode.ExtensionContext) {
                 dumpInConsole("AlwaysOpenWorkspace find folder: ", folderPath, parentUrl);
                 vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, null, { uri: parentUrl, name: parent})
                 return; // finished
-            } else { 
+            } else {
                 //dumpInConsole("AlwaysOpenWorkspace failed to find: ", name, folderPath);
             }
         }
     }
     const disposable = vscode.workspace.onDidOpenTextDocument(didOpenTextDocument);
-    vscode.workspace.textDocuments.forEach(didOpenTextDocument);
 
     const disposable2 = vscode.workspace.onDidCloseTextDocument((textDocument) => {
         const isEnabled: boolean | undefined = vscode.workspace.getConfiguration().get("AlwaysOpenWorkspace.enabled");
@@ -115,15 +128,29 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         const fileUrl = textDocument.uri;
-        const filePath = fileUrl.fsPath;
         if (fileUrl.scheme != 'file') { return; } // it might be git or output scheme, not a real file
 
+        const workspace = vscode.workspace.getWorkspaceFolder(fileUrl)
+        if (!workspace) { return; } // it might be workspace.json. vscode will open and close it from time to time. just ignore it
+
+        const filePath = fileUrl.fsPath;
         dumpInConsole("AlwaysOpenWorkspace didClose: ", fileUrl, filePath);
         closeDeadFolders();
+
+        if (shouldCloseVSCode()) {
+            // the last window, just quit
+            dumpInConsole("!!!!AlwaysOpenWorkspace quit: ");
+            vscode.commands.executeCommand('workbench.action.quit');
+        }
+
     });
+
+    vscode.workspace.textDocuments.forEach(didOpenTextDocument); // open the folders for the initial file which are remembered by vscode
+    closeDeadFolders(); // close the initial folders which are remembered by vscode in previous sessions
 
     context.subscriptions.push(disposable);
     context.subscriptions.push(disposable2);
+
 }
 
 // this method is called when your extension is deactivated

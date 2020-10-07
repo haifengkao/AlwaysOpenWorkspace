@@ -12,7 +12,7 @@
         "type": "git",
         "url": "https://github.com/haifengkao/AlwaysOpenWorkspace.git"
     },
-    "version": "0.0.3",
+    "version": "0.0.7",
     "engines": {
         "vscode": "^1.40.0"
     },
@@ -46,10 +46,23 @@
                         "default": true,
                         "scope": "window"
                     },
+                    "AlwaysOpenWorkspace.autoCloseVSCode": {
+                        "type": "boolean",
+                        "description": "Auto close VSCode when all editors are closed",
+                        "default": false,
+                        "scope": "window"
+                    },
                     "AlwaysOpenWorkspace.rootFolders": {
                         "type": "array",
                         "description": "Identify a workspace folder by the following files or directories. Directories must have a trailing slash. To work correctly with git submodules place .git before .git/.",
-                        "default": [".git", ".git/", "_darcs/", ".hg/", ".bzr/", ".svn/"],
+                        "default": [
+                            ".git",
+                            ".git/",
+                            "_darcs/",
+                            ".hg/",
+                            ".bzr/",
+                            ".svn/"
+                        ],
                         "scope": "window",
                         "items": {
                             "type": "string"
