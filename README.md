@@ -12,6 +12,9 @@ Out of the box it knows about git, darcs, mercurial, bazaar, and subversion, but
 
 The workspace will not be opened if the file has been associated with any existing workspace.
 
+# Caution
+Be sure to disable "Explorer: Expand Single Folder Workspaces" in the VSCode setting. Otherwise VSCode will find the workspace for you (and AlwaysOpenWorkspace will always resepct VSCode's decision
+
 # Features
 ### Auto add folder
 automatically add folders to the current workspace if there are opened files without corresponding folders. If there are no opened workspaces, a new one will be created.
@@ -30,6 +33,9 @@ close the last editor will also close VSCode. default is false, need to enable i
 All logs will be shown in `Help`->`Toggle Developer Tools`
 
 ## Release Notes
+
+### 0.10.0
+- support open current folder if the pattern "./" is added to "Root Folders" setting (default is not)
 
 ### 0.0.4
 - Automatcally close vscode when all editors are closed

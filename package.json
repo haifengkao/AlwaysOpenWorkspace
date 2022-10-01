@@ -12,7 +12,7 @@
         "type": "git",
         "url": "https://github.com/haifengkao/AlwaysOpenWorkspace.git"
     },
-    "version": "0.0.7",
+    "version": "0.10.0",
     "engines": {
         "vscode": "^1.40.0"
     },
@@ -20,7 +20,7 @@
         "Other"
     ],
     "activationEvents": [
-        "*"
+        "onFileSystem:file"
     ],
     "main": "./out/extension.js",
     "contributes": {
@@ -54,7 +54,7 @@
                     },
                     "AlwaysOpenWorkspace.rootFolders": {
                         "type": "array",
-                        "description": "Identify a workspace folder by the following files or directories. Directories must have a trailing slash. To work correctly with git submodules place .git before .git/.",
+                        "description": "Identify a workspace folder by the following files or directories. Directories must have a trailing slash. To work correctly with git submodules place \".git\" before \".git/\". If you want to use current folder, add \"./\" to below",
                         "default": [
                             ".git",
                             ".git/",
