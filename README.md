@@ -30,7 +30,7 @@ close the last editor will also close VSCode. default is false, need to enable i
 - Sometimes auto-remove will fail to remove the unused folder. We are waiting for VS Code to support [better editor API](https://github.com/microsoft/vscode/issues/15178) to solve it.
 
 # Debug
-All logs will be shown in `Help`->`Toggle Developer Tools`
+All logs are shown in `Help`->`Toggle Developer Tools` by default.
 
 ## Release Notes
 
